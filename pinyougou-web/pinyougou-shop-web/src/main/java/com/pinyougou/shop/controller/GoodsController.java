@@ -18,6 +18,11 @@ public class GoodsController {
     @Reference(timeout = 10000)
     private GoodsService goodsService;
 
+    /**
+     * 保存商品
+     * @param goods
+     * @return
+     */
     @PostMapping("/save")
     public Boolean save(@RequestBody Goods goods) {
         try {
@@ -34,6 +39,13 @@ public class GoodsController {
         return false;
     }
 
+    /**
+     * 多条件分页查询
+     * @param goods
+     * @param page
+     * @param rows
+     * @return PageResult
+     */
     @GetMapping("/findByPage")
     public PageResult findByPage(Goods goods, Integer page, Integer rows) {
         try {
@@ -50,6 +62,7 @@ public class GoodsController {
         }
         return goodsService.findByPage(goods,page,rows);
     }
+
 
     @GetMapping("/delete")
     public boolean delete(Long[] ids){

@@ -33,7 +33,7 @@ app.controller("baseController", function ($scope) {
             $scope.ids.push(id);
 
             //只要当前子选框选中，判断其它子选框是否选中，是就让全选框选中
-            if ($("input[name=box]").length==$("input[name=box]:checked").length){
+            if ($("input[name=box]").length == $("input[name=box]:checked").length) {
                 $("#selall").prop("checked", true)
             }
         } else {
@@ -53,11 +53,16 @@ app.controller("baseController", function ($scope) {
     $(function () {
         //给全选的复选框添加事件
         $("#selall").click(function () {
-            // this 全选的复选框
-            var userids = this.checked;//获取name=box的复选框 遍历输出复选框
+            /*var userids = this.checked;
             $("input[name=box]").each(function () {
-                this.checked = userids;
-            });
+               // this.checked = userids;
+                $(this).click();
+            });*/
+             // this 全选的复选框
+             var userids = this.checked;//获取name=box的复选框 遍历输出复选框
+             $("input[name=box]").each(function () {
+                 this.checked = userids;
+             });
         });
     })
 
