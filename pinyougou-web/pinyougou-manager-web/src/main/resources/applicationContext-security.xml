@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/security
+       http://www.springframework.org/schema/security/spring-security.xsd">
+
+    <!-- ########## 配置Http请求URL拦截规则 ########### -->
+    <!-- 配置哪些请求URL不需要拦截 -->
+    <security:http pattern="/css/**" security="none"/>
+    <security:http pattern="/img/**" security="none"/>
+    <security:http pattern="/js/**" security="none"/>
+    <security:http pattern="/plugins/**" security="none"/>
+    <security:http pattern="/login.html" security="none"/>
+    <security:http pattern="/user/checkCode" security="none"/>
+
+    <!-- 配置哪些请求URL需要拦截 -->
+    <!-- entry-point-ref: 配置认证入口(自定义登录控制器接收表单参数做认证) -->
+    <security:http entry-point-ref="authenticationEntryPoint">
+        <!--
+          配置所有登录用户或未登录用户都能访问的请求地址
+          permitAll: 会进Security的登录Filter，如果是登录用户，可以获取到登录用户名
+       -->
+        <security:intercept-url pattern="/user/login" access="permitAll"/>
+
+        <!-- 配置剩余的请求URL需要拦截，先登录，再获取角色 ROLE_* -->
+        <security:intercept-url pattern="/**" access="hasRole('ADMIN')"/>
+        <!-- 配置表单登录
+             登录成功后重定向
+             default-target-url
+             always-use-default-target
+        -->
+        <!--<security:form-login
+                login-page="/login.html"
+                login-processing-url="/login"
+                username-parameter="username"
+                password-parameter="password"
+                default-target-url="/admin/index.html"
+                always-use-default-target="true"
+                authentication-failure-url="/login.html"/>-->
+
+        <!-- 关闭跨站点请求伪造 -->
+        <security:csrf disabled="true"/>
+
+        <!-- 配置请求头 -->
+        <security:headers>
+            <!-- 配置同一个域名下，可以访问iframe子窗口 SAMEORIGIN same origin-->
+            <security:frame-options policy="SAMEORIGIN"/>
+        </security:headers>
+
+        <!-- 配置退出 -->
+        <security:logout logout-url="/logout" invalidate-session="true"/>
+    </security:http>
+
+    <!-- 配置认证入口 -->
+    <bean id="authenticationEntryPoint"
+          class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
+        <!-- 配置认证处理请求地址 -->
+        <constructor-arg value="/user/login"/>
+    </bean>
+
+    <!-- 配置认证管理器 -->
+    <security:authentication-manager id="authenticationManager">
+        <!-- 配置认证提供者 -->
+        <security:authentication-provider>
+            <!-- 配置用户认证服务(通过用户名密码方式) -->
+            <security:user-service>
+                <!-- 配置用户认证信息：用户名、密码、角色-->
+                <security:user name="admin"
+                               password="123456"
+                               authorities="ROLE_ADMIN"/>
+            </security:user-service>
+        </security:authentication-provider>
+    </security:authentication-manager>
+</beans>

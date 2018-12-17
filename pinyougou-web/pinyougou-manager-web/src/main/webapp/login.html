@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>品优购运营商运营管理后台</title>
+    <link rel="icon" href="/assets/img/favicon.ico"/>
+    <link rel="stylesheet" type="text/css" href="/css/webbase.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/pages-login-manage.css"/>
+
+    <script src="/js/plugins/jquery/jquery.min.js"></script>
+    <script src="/js/plugins/sui/sui.min.js"></script>
+    <script src="/js/plugins/jquery-placeholder/jquery.placeholder.min.js"></script>
+    <script src="/js/pages/jquery.slideunlock.js"></script>
+
+    <script src="/plugins/angularjs/angular.min.js"></script>
+    <script src="/js/base.js"></script>
+    <script src="/js/service/baseService.js"></script>
+    <script src="js/controller/loginController.js"></script>
+
+</head>
+<body ng-app="pinyougou"
+      ng-controller="loginController">
+<div class="loginmanage">
+    <div class="py-container">
+        <h4 class="manage-title">品优购运营商运营管理后台</h4>
+        <div class="loginform">
+            <ul class="sui-nav nav-tabs tab-wraped">
+                <li>
+                    <a href="#index" data-toggle="tab">
+                        <h3>扫描登录</h3>
+                    </a>
+                </li>
+                <li class="active">
+                    <a href="#profile" data-toggle="tab">
+                        <h3>账户登录</h3>
+                    </a>
+                </li>
+            </ul>
+            <div class="tab-content tab-wraped">
+                <div id="index" class="tab-pane">
+                    <p>二维码登录，暂为官网二维码</p>
+                    <img src="../img/wx_cz.jpg"/>
+                </div>
+                <div id="profile" class="tab-pane  active">
+                    <form id="loginForm" action="/user/login" method="post" class="sui-form">
+                        <div class="input-prepend">
+                            <span class="add-on loginname"></span>
+                            <input type="text"
+                                   name="username"
+                                   placeholder="邮箱/用户名/手机号" class="span2 input-xfat"/>
+                        </div>
+                        <div class="input-prepend">
+                            <span class="add-on loginpwd"></span>
+                            <input type="password"
+                                   name="password"
+                                   placeholder="请输入密码" class="span2 input-xfat"/>
+                        </div>
+                        <div class="verify">
+                            <table>
+                                <tr>
+                                    <td><input name="check" type="text" placeholder="请输入验证码" autocomplete="off"></td>
+                                    <td align="center" width="150px">
+                                        <img src="/user/checkCode" alt=""
+                                             onclick="changeCheckCode(this)">
+                                        <span>
+                                            {{errorMsg}}
+                                        </span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <!--<div class="setting">
+                             <div id="slider">
+                                 &lt;!&ndash;<div id="slider_bg"></div>
+                                 <span id="label">>></span>
+                                 <span id="labelTip">拖动滑块验证</span>&ndash;&gt;
+                                 <input name="check" type="text" placeholder="请输入验证码" autocomplete="off">
+                                 <span><img src="checkCode" alt="" onclick="changeCheckCode(this)"></span>
+                             </div>
+                        </div>-->
+                        <div class="logined">
+                            <a class="sui-btn btn-block btn-xlarge btn-danger"
+                               onclick="loginForm.submit();">登&nbsp;&nbsp;录</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</div>
+
+
+<!--foot-->
+<div class="py-container copyright">
+    <ul>
+        <li>关于我们</li>
+        <li>联系我们</li>
+        <li>联系客服</li>
+        <li>商家入驻</li>
+        <li>营销中心</li>
+        <li>手机品优购</li>
+        <li>销售联盟</li>
+        <li>品优购社区</li>
+    </ul>
+    <div class="address">地址：北京市昌平区建材城西路金燕龙办公楼一层 邮编：100096 电话：400-618-4000 传真：010-82935100</div>
+    <div class="beian">京ICP备08001421号京公网安备110108007702
+    </div>
+</div>
+<script>
+    $(function () {
+        var slider = new SliderUnlock("#slider", {
+            successLabelTip: "欢迎访问品优购"
+        }, function () {
+            // alert("验证成功,即将跳转至首页");
+            // window.location.href="index.html"
+        });
+        slider.init();
+    })
+</script>
+<script type="text/javascript">
+    //图片点击事件
+    function changeCheckCode(img) {
+        img.src = "/user/checkCode?" + new Date().getTime();
+    }
+</script>
+<!--<script type="text/javascript">
+    // 获取地址栏的参数数组
+    function getUrlParams() {
+        var search = window.location.search;
+        // 写入数据字典
+        var tmparray = search.substr(1, search.length).split("&");
+        var paramsArray = new Array;
+        if (tmparray != null) {
+            for (var i = 0; i < tmparray.length; i++) {
+                var reg = /[=|^==]/; // 用=进行拆分，但不包括==
+                var set1 = tmparray[i].replace(reg, '&');
+                var tmpStr2 = set1.split('&');
+                var array = new Array;
+                array[tmpStr2[0]] = tmpStr2[1];
+                paramsArray.push(array);
+            }
+        }
+        // 将参数数组进行返回
+        return paramsArray;
+    }
+
+    // 根据参数名称获取参数值
+    function getParamValue(name) {
+    //var name = "totalamount";//根据参数名称截取url中参数值
+        var paramsArray = getUrlParams();
+        if (paramsArray != null) {
+            for (var i = 0; i < paramsArray.length; i++) {
+                for (var j in paramsArray[i]) {
+                    if (j == name) {
+                        alert(paramsArray[i][j]);
+                        $('#checkCode').text(paramsArray[i][j]);
+                        return paramsArray[i][j];
+                    }
+                }
+            }
+        }
+        return null;
+    }
+</script>-->
+</body>
+</html>
